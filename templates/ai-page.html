@@ -1,0 +1,362 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>مساعد الذكاء الاصطناعي - بتلة فلاورز</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="دع مساعد الذكاء الاصطناعي يساعدك في اختيار الباقة المثالية">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Tajawal', sans-serif;
+      background-color: #fff;
+      color: #333;
+    }
+    .alert-bar {
+      background: #e91e63;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+    }
+    .container {
+      width: 90%;
+      margin: auto;
+      padding: 40px 0;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #444;
+    }
+    .subtitle {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 18px;
+      color: #777;
+    }
+    .form-card {
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    form label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    form input,
+    form select,
+    form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+    }
+    form button {
+      background-color: #e91e63;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      display: block;
+      margin: auto;
+    }
+    .loading {
+      text-align: center;
+      color: #e91e63;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .recommendation-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 15px;
+      padding: 15px;
+      max-width: 400px;
+      margin: 30px auto 0;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .recommendation-card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    .recommendation-card h3 {
+      margin: 15px 0 10px;
+      font-size: 22px;
+      color: #444;
+    }
+    .recommendation-card p {
+      margin: 5px 0;
+      color: #666;
+    }
+    .recommendation-card .price {
+      font-size: 18px;
+      font-weight: bold;
+      color: #e91e63;
+    }
+    .recommendation-card button {
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    /* تصميم متجاوب للهواتف والأجهزة اللوحية */
+
+@media (max-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .search-box {
+        width: 40%;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .logo, .search-box, .user-actions {
+        width: 100%;
+    }
+    
+    .search-box {
+        order: 3;
+    }
+    
+    .main-nav ul {
+        flex-wrap: wrap;
+    }
+    
+    .main-banner {
+        height: 400px;
+    }
+    
+    .banner-content h1 {
+        font-size: 32px;
+    }
+    
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .category-grid, .product-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-banner {
+        height: 300px;
+    }
+    
+    .banner-content h1 {
+        font-size: 24px;
+    }
+    
+    .section-title {
+        font-size: 22px;
+    }
+}
+.ai-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.ai-button:hover {
+    background-color: #2980b9;
+}
+  </style>
+</head>
+<body>
+  {% include "partials/header.html" %}
+
+  <section class="container">
+    <h1>مساعد الذكاء الاصطناعي</h1>
+    <p class="subtitle">اختر الخيارات وسيقترح مساعدنا باقة تناسبك</p>
+
+    <div class="form-card">
+      <form id="aiForm">
+        <label for="occasion">المناسبة *</label>
+        <select id="occasion" required>
+          <option value="">اختر المناسبة</option>
+          <option value="عيد ميلاد">عيد ميلاد</option>
+          <option value="زفاف">زفاف</option>
+          <option value="تخرج">تخرج</option>
+        </select>
+
+        <label for="budget">الميزانية *</label>
+        <select id="budget" required>
+          <option value="">اختر الميزانية</option>
+          <option value="100">50 - 100 ريال</option>
+          <option value="200">100 - 200 ريال</option>
+          <option value="300">أكثر من 200 ريال</option>
+        </select>
+
+        <label for="recipient">المستلم *</label>
+        <select id="recipient" required>
+          <option value="">اختر المستلم</option>
+          <option value="الأم">الأم</option>
+          <option value="صديق/ة">صديق/ة</option>
+          <option value="شريك/ة">شريك/ة</option>
+        </select>
+
+        <label for="colors">تفضيلات الألوان</label>
+        <input type="text" id="colors" placeholder="مثال: وردي، أبيض...">
+
+        <label for="message">رسالة إضافية (اختياري)</label>
+        <textarea id="message" placeholder="أي تفاصيل إضافية..."></textarea>
+
+        <button type="submit">🌸 عرض التوصيات</button>
+      </form>
+      <div id="loading" class="loading" style="display:none;">جاري تحليل الخيارات...</div>
+      <div id="recommendation" style="display:none;"></div>
+    </div>
+  </section>
+
+  {% include "partials/footer.html" %}
+
+<!-- ✅ تنبيه تسجيل الدخول -->
+<div id="login-alert" style="display:none; background-color:#ffe4e1; color:#a00; padding:10px; margin:15px auto; max-width:500px; text-align:center; border:1px solid #faa; border-radius:6px;">
+  ⚠️ الرجاء تسجيل الدخول أولًا للوصول إلى سلة المشتريات.
+</div>
+
+<script>
+  const isAuthenticated = "{{ request.user.is_authenticated|yesno:'true,false' }}";
+
+  function addToCart(name, price) {
+    const formData = new FormData();
+    formData.append('product_name', name);
+    formData.append('price', price);
+
+    fetch("{% url 'add_to_cart' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getCookie('csrftoken')
+      },
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        // ✅ تحديث العداد مباشرة
+        document.querySelector('.cart-count').textContent = data.count;
+        alert("تمت إضافة المنتج للسلة!");
+      } else {
+        alert("فشل في الإضافة للسلة.");
+      }
+    })
+    .catch(() => {
+      alert("فشل الاتصال بالخادم.");
+    });
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  function showLoginAlert() {
+    const alertBox = document.getElementById("login-alert");
+    alertBox.style.display = "block";
+    setTimeout(() => {
+      alertBox.style.display = "none";
+    }, 3000);
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // زر السلة في الهيدر
+    const cartLink = document.querySelector(".cart-icon");
+    if (cartLink && isAuthenticated !== "true") {
+      cartLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        showLoginAlert();
+      });
+    }
+
+    // تفعيل التوصيات الذكية
+    document.getElementById("aiForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const occasion = document.getElementById("occasion").value;
+      const budget = document.getElementById("budget").value;
+      const recipient = document.getElementById("recipient").value;
+
+      if (!occasion || !budget || !recipient) {
+        alert("يرجى تعبئة الحقول المطلوبة.");
+        return;
+      }
+
+      document.getElementById("loading").style.display = "block";
+      document.getElementById("recommendation").style.display = "none";
+
+      setTimeout(() => {
+        document.getElementById("loading").style.display = "none";
+
+        const recommendationHtml = `
+          <div class="recommendation-card">
+            <img src="{% static 'images/64.jpg' %}" alt="باقة مقترحة">
+            <h3>باقة ${occasion} المميزة</h3>
+            <p>مناسبة لـ ${recipient}</p>
+            <p class="price">${budget} ر.س</p>
+            <button onclick="addToCart('باقة ${occasion}', ${budget})">أضف إلى السلة</button>
+          </div>
+        `;
+
+        document.getElementById("recommendation").innerHTML = recommendationHtml;
+        document.getElementById("recommendation").style.display = "block";
+      }, 1500);
+    });
+  });
+</script>
+
+</body>
+</html>

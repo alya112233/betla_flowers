@@ -1,0 +1,482 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سلة التسوق - بتلة فلاورز</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  {% include "partials/header.html" %}
+  <style>
+    
+/* أنماط صفحة السلة */
+.cart-page {
+    padding: 40px 0;
+    background-color: #f9f9f9;
+    min-height: 70vh;
+}
+
+.cart-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.cart-header h1 {
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.cart-header h1 i {
+    color: #e83e8c;
+}
+
+.breadcrumb {
+    color: #777;
+    font-size: 14px;
+}
+
+.breadcrumb a {
+    color: #e83e8c;
+    text-decoration: none;
+}
+
+.cart-content {
+    display: flex;
+    gap: 30px;
+}
+
+.cart-items {
+    flex: 2;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.cart-table-header {
+    display: flex;
+    background-color: #f5f5f5;
+    padding: 15px 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+    color: #555;
+}
+
+.header-item {
+    padding: 0 10px;
+}
+
+.product-col { flex: 3; }
+.price-col { flex: 1; text-align: center; }
+.quantity-col { flex: 1.5; text-align: center; }
+.total-col { flex: 1; text-align: center; }
+.action-col { flex: 0.5; text-align: center; }
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.product-col {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.product-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-details h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.product-details h3 a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.product-details h3 a:hover {
+    color: #e83e8c;
+}
+
+.product-details p {
+    font-size: 14px;
+    color: #777;
+}
+
+.price-col .product-price {
+    font-weight: 500;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.quantity-btn:hover {
+    background: #f5f5f5;
+}
+
+.quantity-input {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.total-col .product-total {
+    font-weight: bold;
+    color: #e83e8c;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #ff5252;
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform 0.3s;
+}
+
+.remove-btn:hover {
+    transform: scale(1.1);
+}
+
+.cart-summary {
+    flex: 1;
+}
+
+.summary-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    padding: 25px;
+    position: sticky;
+    top: 20px;
+}
+
+.summary-card h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #333;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 15px;
+}
+
+.discount-row {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.discount-input {
+    display: flex;
+    gap: 10px;
+}
+
+.discount-input input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.apply-discount {
+    background-color: #e83e8c;
+    color: white;
+    border: none;
+    padding: 0 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.apply-discount:hover {
+    background-color: #d42d7b;
+}
+
+.discount-amount {
+    color: #4caf50;
+    font-weight: 500;
+}
+
+.total-row {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #ddd;
+}
+
+.total-row .total {
+    color: #e83e8c;
+    font-size: 18px;
+}
+
+.checkout-btn {
+    display: block;
+    width: 100%;
+    background-color: #e83e8c;
+
+
+color: white;
+    text-align: center;
+    padding: 12px;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.checkout-btn:hover {
+    background-color: #d42d7b;
+}
+
+.continue-btn {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #e83e8c;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.continue-btn:hover {
+    color: #d42d7b;
+    text-decoration: underline;
+}
+
+/* تصميم متجاوب */
+@media (max-width: 992px) {
+    .cart-content {
+        flex-direction: column;
+    }
+    
+    .summary-card {
+        position: static;
+        margin-top: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cart-table-header {
+        display: none;
+    }
+    
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        position: relative;
+    }
+    
+    .product-col {
+        width: 100%;
+    }
+    
+    .price-col,
+    .quantity-col,
+    .total-col {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .action-col {
+        position: absolute;
+        left: 20px;
+        top: 20px;
+    }
+    
+    .quantity-control {
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 576px) {
+    .cart-header h1 {
+        font-size: 24px;
+    }
+    
+    .product-col {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .product-image {
+        align-self: center;
+    }
+}
+  </style>
+    <main class="cart-page">
+  <div class="container">
+    <div class="cart-header">
+      <h1><i class="fas fa-shopping-cart"></i> سلة التسوق</h1>
+      <div class="breadcrumb">
+        <a href="{% url 'petals' %}">حسابي</a> / <span>سلة التسوق</span>
+      </div>
+    </div>
+
+    <div class="cart-content">
+      <div class="cart-items">
+        <div class="cart-table-header">
+          <div class="product-col">المنتج</div>
+          <div class="price-col">السعر</div>
+          <div class="quantity-col">الكمية</div>
+          <div class="total-col">المجموع</div>
+          <div class="action-col"></div>
+        </div>
+
+{% if cart_items %}
+  {% for item in cart_items %}
+    <div class="cart-item" id="cart-item-{{ item.id }}">
+      <div class="product-col">
+        <div class="product-image">
+          <img src="{{ item.image }}" alt="{{ item.product_name }}" width="80">
+          
+        </div>
+        <div class="product-details">
+          <h3>{{ item.product_name }}</h3>
+        </div>
+      </div>
+              <div class="price-col">{{ item.price }} ر.س</div>
+              <div class="quantity-col">
+                <div class="quantity-control">
+                  <input type="number" value="{{ item.quantity }}" min="1" class="quantity-input" onchange="updateQuantity(this, {{ item.id }})">
+                </div>
+              </div>
+              <div class="total-col"><span id="total-{{ item.id }}">{{ item.total_price }}</span> ر.س</div>
+              <div class="action-col">
+                <button class="remove-btn" onclick="removeItem({{ item.id }})"><i class="fas fa-trash-alt"></i></button>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p style="padding: 20px; text-align: center;">السلة فارغة</p>
+        {% endif %}
+      </div>
+
+      <div class="cart-summary">
+        <div class="summary-card">
+          <h3>ملخص الطلب</h3>
+          <div class="summary-row"><span>الإجمالي الجزئي</span><span id="subtotal">{{ subtotal }} ر.س</span></div>
+          <div class="summary-row"><span>تكلفة الشحن</span><span id="shipping-cost">{{ shipping_cost }} ر.س</span></div>
+          <div class="summary-row"><span>الخصم</span><span id="discount">-{{ discount }} ر.س</span></div>
+          <div class="summary-row total-row"><strong>المجموع النهائي</strong><strong id="summary-total">{{ total }} ر.س</strong></div>
+          <a href="{% url 'checkout' %}" class="checkout-btn">إتمام الشراء</a>
+          <a href="{% url 'products' %}" class="continue-btn">مواصلة التسوق</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  function updateQuantity(input, itemId) {
+    const quantity = input.value;
+    fetch("{% url 'update_cart_quantity' %}", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: `item_id=${itemId}&quantity=${quantity}`
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById(`total-${itemId}`).innerText = data.new_total.toFixed(2);
+        document.getElementById('summary-total').innerText = data.summary_total.toFixed(2) + ' ر.س';
+        updateCartCount(data.cart_count);
+      } else {
+        alert("فشل تحديث الكمية");
+      }
+    });
+  }
+
+  function removeItem(itemId) {
+    if (!confirm("هل أنت متأكد من حذف هذا المنتج؟")) return;
+    fetch("{% url 'remove_from_cart' %}", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: `item_id=${itemId}`
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const item = document.getElementById(`cart-item-${itemId}`);
+        if (item) item.remove();
+        document.getElementById('summary-total').innerText = data.summary_total.toFixed(2) + ' ر.س';
+        updateCartCount(data.cart_count);
+      } else {
+        alert("فشل حذف المنتج");
+      }
+    });
+  }
+
+  function updateCartCount(count) {
+    document.querySelectorAll('.cart-count').forEach(el => {
+      el.textContent = count;
+    });
+  }
+</script>
+
+{% include "partials/footer.html" %}
+</body>
+</html>

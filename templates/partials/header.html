@@ -1,0 +1,237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>بتلة فلاورز</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .alert-bar {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 8px 0;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .header {
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 20px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px 0;
+      gap: 30px;
+    }
+
+    .logo {
+      margin-left: auto;
+    }
+
+    .logo img {
+      height: 90px;
+    }
+
+    .search-box {
+      flex-grow: 1;
+      max-width: 800px;
+      display: flex;
+      margin-left: auto;
+      height: 50px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 10px 20px;
+      border: 1px solid #ddd;
+      border-radius: 0 4px 4px 0;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .search-box button {
+      background-color: #e83e8c;
+      color: white;
+      border: none;
+      padding: 0 15px;
+      border-radius: 4px 0 0 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      position: relative;
+    }
+
+    .user-actions a {
+      font-size: 30px;
+      color: #555;
+      text-decoration: none;
+      position: relative;
+    }
+
+    .user-actions a:hover {
+      color: #e83e8c;
+    }
+
+    .cart-icon {
+      position: relative;
+    }
+
+    .cart-icon .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background-color: #e83e8c;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .tooltip-alert {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: #ffe4e1;
+      color: #a00;
+      padding: 8px 12px;
+      border: 1px solid #faa;
+      border-radius: 6px;
+      font-size: 14px;
+      white-space: nowrap;
+      margin-top: 5px;
+      display: none;
+      z-index: 1000;
+    }
+    @media (max-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .search-box {
+        width: 40%;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .logo, .search-box, .user-actions {
+        width: 100%;
+    }
+    
+    .search-box {
+        order: 3;
+    }
+    
+    .main-nav ul {
+        flex-wrap: wrap;
+    }
+    
+    .main-banner {
+        height: 400px;
+    }
+    
+    .banner-content h1 {
+        font-size: 32px;
+    }
+    
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="alert-bar">
+    🌸 <strong>عرض خاص:</strong> توصيل مجاني لجميع الطلبات فوق <strong>200</strong> ريال 🌸
+  </div>
+
+  <header class="header">
+    <div class="container">
+      <div class="top-bar">
+        <div class="logo">
+          <a href="{% url 'home' %}">
+            <img src="{% static 'images/new_logo.png' %}" alt="بتلة فلاورز">
+          </a>
+        </div>
+
+        <div class="search-box">
+          <input type="text" placeholder="ابحث عن هدايا، زهور...">
+          <button><i class="fas fa-search"></i></button>
+        </div>
+
+        <div class="user-actions">
+          {% if request.user.is_authenticated %}
+            <span style="color: #e83e8c; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+              🌸 مرحبًا، {{ request.user.username }}
+            </span>
+
+            <a href="{% url 'logout' %}" style="font-size: 16px; color: #e83e8c; font-weight: normal;">تسجيل الخروج</a>
+
+            <a href="{% url 'cart' %}" class="cart-icon" title="سلة المشتريات">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="cart-count">{{ request.session.cart_count|default:0 }}</span>
+            </a>
+          {% elif request.resolver_match.url_name in 'home about contact delivery ai_page login register forgot_password' %}
+            <a href="{% url 'login' %}" title="تسجيل الدخول"><i class="far fa-user"></i></a>
+            <a href="javascript:void(0);" class="cart-icon" onclick="showLoginTooltip(this)" title="سلة المشتريات">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="cart-count">0</span>
+              <span class="tooltip-alert" id="tooltip-alert">⚠️ الرجاء تسجيل الدخول أولاً للوصول إلى سلة المشتريات.</span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <script>
+    function showLoginTooltip(element) {
+      const tooltip = element.querySelector(".tooltip-alert");
+      if (tooltip) {
+        tooltip.style.display = "block";
+        setTimeout(() => {
+          tooltip.style.display = "none";
+        }, 3000);
+      }
+    }
+  </script>
+
+</body>
+</html>

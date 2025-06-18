@@ -1,0 +1,833 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>الرئيسية - متجر بتلة فلاورز</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+
+    .main-banner {
+      background-image: url("{% static 'images/2020.jpg' %}");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .main-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .banner-content {
+      position: relative;
+      z-index: 2;
+      max-width: 600px;
+      text-align: center;
+      color: white;
+    }
+
+    .banner-content h1 {
+      font-size: 42px;
+      margin-bottom: 20px;
+    }
+
+    .banner-content p {
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #e83e8c;
+      color: white;
+      padding: 10px 25px;
+      margin: 5px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #c2185b;
+    }
+
+    .product-buttons, .featured-products {
+      padding: 60px 0;
+    }
+
+    .category-grid, .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .category-item, .product-card {
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      text-align: center;
+    }
+
+    .category-item:hover, .product-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .category-item img, .product-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    .category-item h3, .product-info h3 {
+      padding: 15px;
+      font-size: 18px;
+    }
+
+    .product-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 150px;
+}
+
+    .price {
+      margin-bottom: 15px;
+    }
+
+    .current-price {
+      font-size: 18px;
+      font-weight: bold;
+      color: #e83e8c;
+    }
+
+    .old-price {
+      font-size: 14px;
+      color: #999;
+      text-decoration: line-through;
+      margin-right: 10px;
+    }
+
+    .add-to-cart {
+      width: 100%;
+      padding: 10px;
+      background-color: #e83e8c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-to-cart:hover {
+      background-color: #d42d7b;
+    }
+    /* أنماط السلايدر الرئيسي */
+/* أنماط السلايدر المعدلة */
+.main-slider {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    overflow: hidden;
+}
+
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease, transform 1s ease;
+    z-index: 1;
+}
+
+.slide.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+.slide-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.slide-content {
+    position: absolute;
+    top: 50%;
+    right: 10%;
+    transform: translateY(-50%);
+    color: white;
+    text-align: right;
+    max-width: 600px;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 30px;
+    border-radius: 10px;
+    z-index: 3;
+}
+
+.slide-title {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    animation: fadeInDown 1s ease;
+}
+
+.slide-text {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    animation: fadeInUp 1s ease;
+}
+
+.slide-btn {
+    display: inline-block;
+    padding: 10px 25px;
+    background-color: #e83e8c;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    animation: zoomIn 1s ease;
+}
+
+.slider-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 4;
+}
+
+.slider-control:hover {
+    background-color: rgba(232, 62, 140, 0.8);
+}
+
+.prev-btn {
+    right: 30px;
+}
+
+.next-btn {
+    left: 30px;
+}
+
+.slider-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 4;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background-color: #e83e8c;
+    transform: scale(1.2);
+}
+
+/* تأثيرات الحركة */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* تصميم متجاوب */
+@media (max-width: 768px) {
+    .main-slider {
+        height: 60vh;
+    }
+    
+    .slide-content {
+        right: 5%;
+        left: 5%;
+        max-width: none;
+        padding: 20px;
+    }
+    
+    .slide-title {
+        font-size: 1.8rem;
+    }
+    
+    .slide-text {
+        font-size: 1.2rem;
+    }
+    
+    .slider-control {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+    /* ✅ الإعلان العائم */
+    .floating-ad {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      max-width: 300px;
+      z-index: 1000;
+      border: 2px solid #e83e8c;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .close-ad {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: none;
+      border: none;
+      color: #999;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .close-ad:hover {
+      color: #e83e8c;
+    }
+
+    .ad-content {
+      text-align: center;
+    }
+
+    .ad-content h3 {
+      color: #e83e8c;
+      margin-bottom: 10px;
+    }
+
+    .ad-content p {
+      margin-bottom: 15px;
+    }
+
+    .ad-content span {
+      font-weight: bold;
+      color: #e83e8c;
+    }
+
+    .ad-content .btn {
+      width: 80%;
+      margin: 0 auto;
+      background-color: #e83e8c;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* تصميم متجاوب للهواتف والأجهزة اللوحية */
+
+@media (max-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .search-box {
+        width: 40%;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .logo, .search-box, .user-actions {
+        width: 100%;
+    }
+    
+    .search-box {
+        order: 3;
+    }
+    
+    .main-nav ul {
+        flex-wrap: wrap;
+    }
+    
+    .main-banner {
+        height: 400px;
+    }
+    
+    .banner-content h1 {
+        font-size: 32px;
+    }
+    
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .category-grid, .product-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-banner {
+        height: 300px;
+    }
+    
+    .banner-content h1 {
+        font-size: 24px;
+    }
+    
+    .section-title {
+        font-size: 22px;
+    }
+}
+.ai-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.ai-button:hover {
+    background-color: #2980b9;
+}
+/* تصميم متجاوب للإعلان العائم */
+@media (max-width: 768px) {
+    .floating-ad {
+        max-width: 250px;
+        left: 20px;
+        bottom: 20px;
+    }
+}
+  </style>
+</head>
+<body>
+
+  {% include 'partials/header.html' %}
+
+  <section class="main-banner">
+    <div class="banner-content">
+      <h1>أجمل باقات الزهور لجميع المناسبات</h1>
+      <p>اختر من بين مجموعة واسعة من الزهور والهدايا</p>
+      <a href="{% url 'login' %}" class="btn">تسوق الآن</a>
+      <a href="{% url 'ai_page' %}" class="btn">المساعد للذكاء الاصطناعي</a>
+    </div>
+  </section>
+
+  <!-- فئات المنتجات -->
+  <section class="product-buttons">
+    <div class="product">
+      <h2 class="section-title">تصفح حسب الفئة</h2>
+      <div class="category-grid">
+        <div class="category-item">
+          <img src="{% static 'images/85.jpg' %}" alt="زهور طبيعية">
+          <a href="{% url 'login' %}" class="pink-btn"><h3>زهور طبيعية</h3></a>
+          <div class="price">
+              <span class="current-price">140 ر.س</span>
+            </div>
+          <button class="add-to-cart">أضف إلى السلة</button>
+        </div>
+        <div class="category-item">
+          <img src="{% static 'images/86.jpg' %}" alt="باقات مميزة">
+          <a href="{% url 'login' %}" class="pink-btn"><h3>باقات مميزة</h3></a>
+          <div class="price">
+              <span class="current-price">150 ر.س</span>
+            </div>
+          <button class="add-to-cart">أضف إلى السلة</button>
+        </div>
+        <div class="category-item">
+          <img src="{% static 'images/83.jpg' %}" alt="هدايا">
+          <a href="{% url 'login' %}" class="pink-btn"><h3>هدايا</h3></a>
+          <div class="price">
+              <span class="current-price">200 ر.س</span>
+            </div>
+          <button class="add-to-cart">أضف إلى السلة</button>
+        </div>
+        <div class="category-item">
+          <img src="{% static 'images/62.jpg' %}" alt="مناسبات">
+          <a href="{% url 'login' %}" class="pink-btn"><h3>مناسبات</h3></a>
+          <div class="price">
+              <span class="current-price">100 ر.س</span>
+            </div>
+          <button class="add-to-cart">أضف إلى السلة</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- المنتجات المميزة -->
+  <section class="featured-products">
+    <div class="container">
+      <h2 class="section-title">منتجات مميزة</h2>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-badge"></div>
+          <img src="{% static 'images/64.jpg' %}" alt="باقة مميزة">
+          <div class="product-info">
+            <h3>باقة حب</h3>
+            <div class="price">
+              <span class="current-price">199 ر.س</span>
+              <span class="old-price">249 ر.س</span>
+            </div>
+            <button class="add-to-cart">أضف إلى السلة</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <img src="{% static 'images/63.jpg' %}" alt="باقة زهور">
+          <div class="product-info">
+            <h3>باقة عيد ميلاد</h3>
+            <div class="price">
+              <span class="current-price">179 ر.س</span>
+            </div>
+            <button class="add-to-cart">أضف إلى السلة</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <img src="{% static 'images/66.jpg' %}" alt="باقة زهور">
+          <div class="product-info">
+            <h3>باقة عيد ميلاد</h3>
+            <div class="price">
+              <span class="current-price">179 ر.س</span>
+            </div>
+            <button class="add-to-cart">أضف إلى السلة</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <img src="{% static 'images/68.jpg' %}" alt="باقة زهور">
+          <div class="product-info">
+            <h3>باقة عيد ميلاد</h3>
+            <div class="price">
+              <span class="current-price">179 ر.س</span>
+            </div>
+            <button class="add-to-cart">أضف إلى السلة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ الإعلان العائم -->
+  <div class="floating-ad" id="floatingAd">
+    <button class="close-ad" onclick="document.getElementById('floatingAd').style.display='none'">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="ad-content">
+      <h3>خصم 20% لأول طلبية</h3>
+      <p>استخدم الكود <span>WELCOME20</span> عند الدفع</p>
+      <a href="{% url 'login' %}" class="btn">استفد من العرض</a>
+    </div>
+  </div>
+  
+{% load static %}
+<section class="main-slider">
+    <div class="slider-container">
+        <!-- الشريحة 1 -->
+        <div class="slide active">
+            <img src="{% static 'images/slaid1.jpg' %}" alt="عرض خاص" class="slide-image">
+            <div class="slide-content">
+                <h2 class="slide-title">خصم 30% على جميع الباقات</h2>
+                <p class="slide-text">عرض لفترة محدودة</p>
+                <a href="{% url 'login' %}" class="slide-btn">تسوق الآن</a>
+            </div>
+        </div>
+
+        <!-- الشريحة 2 -->
+        <div class="slide">
+            <img src="{% static 'images/1122.jpg' %}" alt="مناسبة خاصة" class="slide-image">
+            <div class="slide-content">
+                <h2 class="slide-title">باقات زفاف فاخرة</h2>
+                <p class="slide-text">لأجمل يوم في حياتك</p>
+                <a href="{% url 'login' %}" class="slide-btn">اكتشف المزيد</a>
+            </div>
+        </div>
+
+        <!-- الشريحة 3 -->
+        <div class="slide">
+            <img src="{% static 'images/666.jpg' %}" alt="توصيل سريع" class="slide-image">
+            <div class="slide-content">
+                <h2 class="slide-title">توصيل سريع خلال ساعتين</h2>
+                <p class="slide-text">من خلال فروعنا في المملكة</p>
+                <a href="{% url 'delivery' %}" class="slide-btn">تعرف على مناطق التوصيل</a>
+            </div>
+        </div>
+
+        <!-- عناصر التحكم -->
+        <button class="slider-control prev-btn"><i class="fas fa-chevron-right"></i></button>
+        <button class="slider-control next-btn"><i class="fas fa-chevron-left"></i></button>
+
+        <div class="slider-dots">
+            <span class="dot active" data-slide="0"></span>
+            <span class="dot" data-slide="1"></span>
+            <span class="dot" data-slide="2"></span>
+        </div>
+    </div>
+</section>
+  <!-- ✅ تنبيه تسجيل الدخول -->
+<!-- ✅ تنبيه تسجيل الدخول -->
+<div id="login-alert" style="display:none; background-color:#ffe4e1; color:#a00; padding:10px; margin:15px auto; max-width:500px; text-align:center; border:1px solid #faa; border-radius:6px;">
+  ⚠️ الرجاء تسجيل الدخول أولًا للوصول إلى سلة المشتريات.
+</div>
+
+<script>
+  // ✅ تحقق من حالة تسجيل الدخول (جلب من Django)
+  const isAuthenticated = "{{ request.user.is_authenticated|yesno:'true,false' }}";
+
+  // ✅ إضافة إلى السلة
+  function addToCart(title, price) {
+    const formData = new FormData();
+    formData.append('product_name', title);
+    formData.append('price', price);
+
+    fetch("{% url 'add_to_cart' %}", {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.querySelector('.cart-count').textContent = data.count;
+      } else {
+        alert(data.error || 'حدث خطأ، حاول مرة أخرى');
+      }
+    })
+    .catch(error => {
+      alert('فشل الاتصال بالخادم.');
+      console.error(error);
+    });
+  }
+
+  // ✅ كود تشغيل أزرار السلة من كروت المنتجات
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+      button.addEventListener('click', function () {
+        const card = this.closest('.product-card');
+        const title = card.querySelector('h3').innerText;
+        const priceText = card.querySelector('.current-price').innerText;
+        const price = priceText.replace(/[^\d.]/g, '');
+        addToCart(title, price);
+      });
+    });
+
+    // ✅ كود السلايدر (Slider)
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    let currentIndex = 0;
+    let slideInterval;
+    const slideDuration = 5000;
+
+    function initSlider() {
+      if (slides.length === 0) return;
+      showSlide(currentIndex);
+      startSlideShow();
+    }
+
+    function showSlide(index) {
+      if (index >= slides.length) currentIndex = 0;
+      else if (index < 0) currentIndex = slides.length - 1;
+      else currentIndex = index;
+
+      slides.forEach(slide => {
+        slide.classList.remove('active');
+        slide.style.opacity = '0';
+        slide.style.zIndex = '1';
+      });
+
+      dots.forEach(dot => dot.classList.remove('active'));
+
+      slides[currentIndex].classList.add('active');
+      slides[currentIndex].style.opacity = '1';
+      slides[currentIndex].style.zIndex = '2';
+      dots[currentIndex].classList.add('active');
+      animateSlideContent();
+    }
+
+    function nextSlide() {
+      showSlide(currentIndex + 1);
+    }
+
+    function prevSlide() {
+      showSlide(currentIndex - 1);
+    }
+
+    function startSlideShow() {
+      clearInterval(slideInterval);
+      slideInterval = setInterval(nextSlide, slideDuration);
+    }
+
+    function pauseSlideShow() {
+      clearInterval(slideInterval);
+    }
+
+    function animateSlideContent() {
+      const activeSlide = document.querySelector('.slide.active');
+      if (!activeSlide) return;
+      const title = activeSlide.querySelector('.slide-title');
+      const text = activeSlide.querySelector('.slide-text');
+      const button = activeSlide.querySelector('.slide-btn');
+
+      title.style.animation = 'none';
+      text.style.animation = 'none';
+      button.style.animation = 'none';
+
+      setTimeout(() => {
+        title.style.animation = 'fadeInDown 1s ease forwards';
+        text.style.animation = 'fadeInUp 1s ease forwards';
+        button.style.animation = 'zoomIn 1s ease forwards';
+      }, 50);
+    }
+
+    nextBtn?.addEventListener('click', () => {
+      nextSlide();
+      pauseSlideShow();
+      setTimeout(startSlideShow, 10000);
+    });
+
+    prevBtn?.addEventListener('click', () => {
+      prevSlide();
+      pauseSlideShow();
+      setTimeout(startSlideShow, 10000);
+    });
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', function () {
+        const slideIndex = parseInt(this.getAttribute('data-slide'));
+        showSlide(slideIndex);
+        pauseSlideShow();
+        setTimeout(startSlideShow, 10000);
+      });
+    });
+
+    const slider = document.querySelector('.slider-container');
+    slider?.addEventListener('mouseenter', pauseSlideShow);
+    slider?.addEventListener('mouseleave', startSlideShow);
+
+    initSlider();
+  });
+
+  // ✅ عرض تنبيه تسجيل الدخول
+  function showLoginAlert() {
+    const alertBox = document.getElementById("login-alert");
+    alertBox.style.display = "block";
+    setTimeout(() => {
+      alertBox.style.display = "none";
+    }, 3000);
+  }
+
+  // ✅ جلب التوكن
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+
+
+{% include 'partials/footer.html' %}
+</body>
+</html>

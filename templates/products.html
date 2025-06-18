@@ -1,0 +1,270 @@
+{% load static %}
+{% include "partials/header.html" %}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>صفحة المنتجات</title>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+    .section-title {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 30px;
+      color: #444;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+    .product-card {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: 0.3s;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+    .product-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+    }
+    .product-info {
+      padding: 15px;
+      text-align: center;
+    }
+    .product-info h3 {
+      font-size: 18px;
+      margin: 10px 0;
+      color: #333;
+    }
+    .price {
+      font-size: 16px;
+      color: #e83e8c;
+      margin-bottom: 12px;
+    }
+    .add-to-cart {
+      background-color: #e83e8c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .add-to-cart:hover {
+      background-color: #d71e75;
+    }
+
+    /* ✅ دعم الشاشات الصغيرة (الجوال) */
+    @media (max-width: 576px) {
+      .container {
+        padding: 20px 10px;
+      }
+
+      .section-title {
+        font-size: 24px;
+      }
+
+      .product-info h3 {
+        font-size: 16px;
+      }
+
+      .add-to-cart {
+        padding: 8px 15px;
+        font-size: 14px;
+      }
+
+      .product-card img {
+        height: 200px;
+      }
+    }
+    @media (max-width: 600px) {
+  .container {
+    padding: 20px 10px;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .section-title {
+    font-size: 24px;
+  }
+
+  .add-to-cart {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+  }
+
+  .product-card img {
+    height: auto;
+  }
+}
+/* تصميم متجاوب للهواتف والأجهزة اللوحية */
+
+@media (max-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .search-box {
+        width: 40%;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .logo, .search-box, .user-actions {
+        width: 100%;
+    }
+    
+    .search-box {
+        order: 3;
+    }
+    
+    .main-nav ul {
+        flex-wrap: wrap;
+    }
+    
+    .main-banner {
+        height: 400px;
+    }
+    
+    .banner-content h1 {
+        font-size: 32px;
+    }
+    
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .category-grid, .product-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-banner {
+        height: 300px;
+    }
+    
+    .banner-content h1 {
+        font-size: 24px;
+    }
+    
+    .section-title {
+        font-size: 22px;
+    }
+}
+.ai-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.ai-button:hover {
+    background-color: #2980b9;
+}
+  </style>
+</head>
+<body>
+
+<section class="featured-products">
+  <div class="container">
+    <h2 class="section-title">منتجات مميزة</h2>
+    <div class="product-grid">
+      {% for img in images %}
+      <div class="product-card">
+        <img src="{% static 'images/' %}{{ img }}" alt="منتج">
+        <div class="product-info">
+          <h3>باقة ورد</h3>
+          <div class="price"><span class="current-price">99 ر.س</span></div>
+          <button class="add-to-cart"
+                  data-name="باقة ورد"
+                  data-price="99"
+                  data-image="{{ img }}">أضف إلى السلة</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function () {
+      const name = this.dataset.name;
+      const price = this.dataset.price;
+      const image = this.dataset.image;
+
+      const formData = new FormData();
+      formData.append('product_name', name);
+      formData.append('price', price);
+      formData.append('image', '/static/images/' + image);
+
+      fetch("{% url 'add_to_cart' %}", {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("✅ تمت الإضافة إلى السلة");
+          document.querySelectorAll('.cart-count').forEach(el => {
+            el.textContent = data.count;
+          });
+        } else {
+          alert("❌ خطأ: " + data.error);
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
+
+{% include "partials/footer.html" %}

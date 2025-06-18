@@ -1,0 +1,460 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب جديد - بتلة فلاورز</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+
+/* أنماط صفحات المصادقة (تسجيل دخول، تسجيل حساب، استعادة كلمة مرور) */
+.auth-header {
+    padding: 20px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.auth-page {
+    padding: 60px 0;
+    background-color: #f9f9f9;
+    min-height: calc(100vh - 150px);
+}
+
+.auth-container {
+    display: flex;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.auth-form {
+    flex: 1;
+    padding: 40px;
+}
+
+.auth-form h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.auth-form h1 i {
+    color: #e83e8c;
+}
+
+.auth-description {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 15px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.input-with-icon input {
+    width: 100%;
+    padding: 12px 45px 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 15px;
+    transition: all 0.3s;
+}
+
+.input-with-icon input:focus {
+    border-color: #e83e8c;
+    outline: none;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.password-strength {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.strength-bar {
+    height: 4px;
+    border-radius: 2px;
+    background-color: #eee;
+    flex: 1;
+    max-width: 30px;
+}
+
+.strength-text {
+    font-size: 12px;
+    color: #777;
+    margin-right: 10px;
+}
+
+.strength-bar.weak {
+    background-color: #ff5252;
+}
+
+.strength-bar.medium {
+    background-color: #ffb74d;
+}
+
+.strength-bar.strong {
+    background-color: #4caf50;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.remember-me input {
+    width: auto;
+}
+
+.forgot-password {
+    color: #e83e8c;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.terms {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 25px;
+}
+
+.terms input {
+    width: auto;
+}
+
+.terms label {
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+.terms a {
+    color: #e83e8c;
+    text-decoration: none;
+}
+
+.terms a:hover {
+    text-decoration: underline;
+}
+
+.auth-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: #e83e8c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 20px;
+}
+
+.auth-btn:hover {
+    background-color: #d42d7b;
+}
+
+.auth-footer {
+    text-align: center;
+    color: #666;
+    font-size: 15px;
+}
+
+.auth-footer a {
+    color: #e83e8c;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+.auth-image {
+    flex: 1;
+    position: relative;
+    background-color: #fce4ec;
+}
+
+.auth-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.auth-benefits {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 30px;
+}
+
+.auth-benefits h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.auth-benefits ul {
+    list-style: none;
+}
+
+.auth-benefits li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.auth-benefits i {
+    color: #e83e8c;
+}
+
+.auth-footer {
+    padding: 20px 0;
+    background-color: #f5f5f5;
+    text-align: center;
+}
+
+.copyright {
+    color: #666;
+    font-size: 14px;
+}
+
+
+/* تصميم متجاوب */
+@media (max-width: 992px) {
+    .auth-container {
+        flex-direction: column;
+    }
+    
+    .auth-image {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .auth-form {
+        padding: 30px 20px;
+    }
+    
+    .auth-form h1 {
+        font-size: 24px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+    </style>
+</head>
+<body>
+{% include 'partials/header.html' %}
+
+<main class="auth-page">
+  <div class="container">
+    <div class="auth-container">
+      <div class="auth-form">
+        <h1><i class="fas fa-user-plus"></i> إنشاء حساب جديد</h1>
+
+        <form method="POST" action="{% url 'register' %}?next=/login/" autocomplete="off">
+          {% csrf_token %}
+          {% if form.errors %}
+            <ul style="color:red; font-size:14px;">
+              {% for field in form %}
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+              {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="id_first_name">الاسم الأول *</label>
+              <div class="input-with-icon">
+                <i class="fas fa-user"></i>
+                {{ form.first_name }}
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="id_last_name">اسم العائلة *</label>
+              <div class="input-with-icon">
+                <i class="fas fa-user"></i>
+                {{ form.last_name }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="id_email">البريد الإلكتروني *</label>
+            <div class="input-with-icon">
+              <i class="fas fa-envelope"></i>
+              {{ form.email }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="id_username">اسم المستخدم *</label>
+            <div class="input-with-icon">
+              <i class="fas fa-user"></i>
+              {{ form.username }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="id_password1">كلمة المرور *</label>
+            <div class="input-with-icon">
+              <i class="fas fa-lock"></i>
+              {{ form.password1 }}
+              <button type="button" class="toggle-password"><i class="fas fa-eye"></i></button>
+            </div>
+            <div class="password-strength">
+              <span class="strength-bar" id="bar1"></span>
+              <span class="strength-bar" id="bar2"></span>
+              <span class="strength-bar" id="bar3"></span>
+              <span class="strength-text" id="strength-text">قوة كلمة المرور: ضعيفة</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="id_password2">تأكيد كلمة المرور *</label>
+            <div class="input-with-icon">
+              <i class="fas fa-lock"></i>
+              {{ form.password2 }}
+              <button type="button" class="toggle-password"><i class="fas fa-eye"></i></button>
+            </div>
+          </div>
+
+          <div class="form-group terms">
+            <input type="checkbox" id="agreeTerms" required>
+            <label for="agreeTerms">أوافق على <a href="#">الشروط والأحكام</a> وسياسة الخصوصية</label>
+          </div>
+
+          <button type="submit" class="auth-btn">إنشاء حساب</button>
+
+          <div class="auth-footer">
+            <p>لديك حساب بالفعل؟ <a href="{% url 'login' %}">تسجيل الدخول</a></p>
+          </div>
+        </form>
+      </div>
+
+      <div class="auth-image">
+        <img src="{% static 'images/81.jpg' %}" alt="زهور">
+        <div class="auth-benefits">
+          <h3>مزايا التسجيل</h3>
+          <ul>
+            <li><i class="fas fa-check-circle"></i> تتبع طلباتك بسهولة</li>
+            <li><i class="fas fa-check-circle"></i> حفظ سجل المشتريات</li>
+            <li><i class="fas fa-check-circle"></i> عملية دفع أسرع</li>
+            <li><i class="fas fa-check-circle"></i> عروض حصرية للأعضاء</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% include 'partials/footer.html' %}
+
+<script>
+  const passwordInput = document.getElementById("id_password1");
+  const bar1 = document.getElementById("bar1");
+  const bar2 = document.getElementById("bar2");
+  const bar3 = document.getElementById("bar3");
+  const strengthText = document.getElementById("strength-text");
+
+  passwordInput.addEventListener("input", () => {
+    const val = passwordInput.value;
+    let strength = 0;
+    if (val.length >= 6) strength++;
+    if (/[A-Z]/.test(val)) strength++;
+    if (/[0-9]/.test(val)) strength++;
+    if (/[@$!%*?&]/.test(val)) strength++;
+
+    bar1.style.backgroundColor = strength >= 1 ? "#ff5252" : "#eee";
+    bar2.style.backgroundColor = strength >= 3 ? "#ffb74d" : "#eee";
+    bar3.style.backgroundColor = strength >= 4 ? "#4caf50" : "#eee";
+
+    strengthText.textContent = strength >= 4 ? "قوة كلمة المرور: قوية" : strength >= 3 ? "قوة كلمة المرور: متوسطة" : "قوة كلمة المرور: ضعيفة";
+  });
+
+  document.querySelectorAll('.toggle-password').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = btn.previousElementSibling;
+      const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+      input.setAttribute('type', type);
+      btn.querySelector('i').classList.toggle('fa-eye');
+      btn.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+  });
+</script>
+</body>
+</html>
+

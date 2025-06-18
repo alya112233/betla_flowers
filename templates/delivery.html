@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مواقع التوصيل - بتلة فلاورز</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .section-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 0 10px rgba(100, 0, 200, 0.07);
+    }
+    h2, h3 {
+      color: #e91e63;
+      margin-bottom: 15px;
+    }
+    select, textarea, input[type="date"], input[type="time"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e91e63;
+    }
+    iframe {
+      width: 100%;
+      height: 300px;
+      border-radius: 10px;
+      border: none;
+    }
+    .stars {
+      font-size: 22px;
+      color: gold;
+    }
+    .message {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #4caf50;
+    }
+    .rating {
+  direction: rtl;
+  unicode-bidi: bidi-override;
+  display: inline-block;
+}
+
+.rating input {
+  display: none;
+}
+
+.rating label {
+  font-size: 26px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.rating input:checked ~ label {
+  color: gold;
+}
+
+.rating label:hover,
+.rating label:hover ~ label {
+  color: gold;
+}
+
+  </style>
+</head>
+<body>
+
+{% include "partials/header.html" %}
+
+<div class="container">
+
+  <!-- ✅ اختيار المدينة -->
+  <div class="section-box">
+    <h3>اختر المدينة التي نوصل إليها:</h3>
+    <select id="city-select" onchange="updateDeliveryInfo()">
+      <option value="" selected disabled>اختر مدينة...</option>
+      <option value="الرياض">الرياض</option>
+      <option value="جدة">جدة</option>
+      <option value="الشرقية">الشرقية</option>
+      <option value="مكة">مكة</option>
+      <option value="المدينة">المدينة</option>
+    </select>
+    <div id="delivery-info" class="message"></div>
+  </div>
+
+  <!-- ✅ الخريطة وتحديد الموقع -->
+  <div class="section-box">
+    <h3>موقعك الحالي على الخريطة:</h3>
+    <button onclick="locateMe()">📍 تحديد موقعي</button>
+    <iframe id="user-map"
+      src="https://maps.google.com/maps?q=24.7136,46.6753&hl=ar&z=14&output=embed"
+      allowfullscreen loading="lazy">
+    </iframe>
+    <div id="nearest-branch" class="message"></div>
+  </div>
+
+  <!-- ✅ تقييم التجربة -->
+  <div class="section-box">
+  <h3>قيّم تجربتك:</h3>
+  <div class="rating">
+    <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+    <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+    <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+    <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+    <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+  </div>
+  <textarea placeholder="اترك تعليقك هنا..."></textarea>
+</div>
+
+  <!-- ✅ أوقات العمل -->
+  <div class="section-box">
+    <h3>أوقات العمل:</h3>
+    <ul>
+      <li>الرياض: 9 صباحًا - 11 مساءً</li>
+      <li>جدة: 10 صباحًا - 10 مساءً</li>
+      <li>الشرقية: 9 صباحًا - 9 مساءً</li>
+    </ul>
+  </div>
+
+  <!-- ✅ حجز موعد توصيل -->
+  <div class="section-box">
+    <h3>احجز موعد توصيل:</h3>
+    <input type="date" />
+    <input type="time" />
+  </div>
+
+  <!-- ✅ تحقق من وجود طلب -->
+  <div class="section-box" style="text-align: center;">
+    <button onclick="checkOrderStatus()">✅ تحقق من وجود طلب</button>
+  </div>
+
+</div>
+
+{% include "partials/footer.html" %}
+
+<script>
+  function updateDeliveryInfo() {
+    const city = document.getElementById("city-select").value;
+    const info = document.getElementById("delivery-info");
+    const supported = ["الرياض", "جدة", "الشرقية"];
+
+    if (supported.includes(city)) {
+      info.textContent = `✅ التوصيل متاح في ${city} خلال ساعتين.`;
+    } else {
+      info.textContent = `❌ نأسف، لا نوفر التوصيل حاليًا في ${city}.`;
+    }
+  }
+
+  function locateMe() {
+    const map = document.getElementById("user-map");
+    const branch = document.getElementById("nearest-branch");
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        map.src = `https://maps.google.com/maps?q=${lat},${lon}&hl=ar&z=14&output=embed`;
+
+        // محاكاة العثور على الفرع الأقرب
+        if (lat >= 24 && lat <= 25 && lon >= 46 && lon <= 47) {
+          branch.textContent = "أقرب فرع إليك: فرع العليا - الرياض.";
+        } else {
+          branch.textContent = "📍 لم نتمكن من تحديد فرع قريب.";
+        }
+      }, () => {
+        alert("لم نتمكن من الوصول إلى موقعك.");
+      });
+    } else {
+      alert("المتصفح لا يدعم تحديد الموقع.");
+    }
+  }
+
+  function checkOrderStatus() {
+    fetch("{% url 'check_order_status' %}", {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "confirmed") {
+        alert("✅ تم تأكيد طلبك وسيتم التواصل معك قريبًا.");
+      } else {
+        alert("🚫 لا يوجد طلبات حالية. تأكد من إتمام الدفع.");
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
