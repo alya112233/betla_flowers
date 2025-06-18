@@ -493,112 +493,171 @@
         bottom: 20px;
     }
 }
+.product-buttons {
+  padding-bottom: 20px;
+}
+
+.featured-products {
+  padding-top: 20px;
+}
+
+/* ✅ توحيد تصميم كروت الفئات مع كروت المنتجات */
+.category-item {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  text-align: center;
+}
+
+.category-item h3 {
+  padding: 15px;
+  font-size: 18px;
+  color: #333 !important; /* ← نستخدم !important لضمان التطبيق */
+}
+
+.category-item a.pink-btn {
+  text-decoration: none !important;
+  color: #000 !important;
+}
+
+.category-item a.pink-btn h3 {
+  color: #000 !important;
+  font-weight: bold;
+}
+
+/* ✅ توحيد مقاسات الصور */
+.category-item img,
+.product-card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.product-card img,
+.category-item img {
+  width: 100% !important;
+  height: 240px !important;
+  object-fit: cover !important;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
   </style>
 </head>
 <body>
 
   {% include 'partials/header.html' %}
 
-  <section class="main-banner">
-    <div class="banner-content">
-      <h1>أجمل باقات الزهور لجميع المناسبات</h1>
-      <p>اختر من بين مجموعة واسعة من الزهور والهدايا</p>
-      <a href="{% url 'login' %}" class="btn">تسوق الآن</a>
-      <a href="{% url 'ai_page' %}" class="btn">المساعد للذكاء الاصطناعي</a>
-    </div>
-  </section>
+<section class="main-banner">
+  <div class="banner-content">
+    <h1>أجمل باقات الزهور لجميع المناسبات</h1>
+    <p>اختر من بين مجموعة واسعة من الزهور والهدايا</p>
+    <a href="{% url 'login' %}" class="btn">تسوق الآن</a>
+    <a href="{% url 'ai_page' %}" class="btn">المساعد للذكاء الاصطناعي</a>
+  </div>
+</section>
 
-  <!-- فئات المنتجات -->
-  <section class="product-buttons">
-    <div class="product">
-      <h2 class="section-title">تصفح حسب الفئة</h2>
-      <div class="category-grid">
-        <div class="category-item">
-          <img src="{% static 'images/85.jpg' %}" alt="زهور طبيعية">
-          <a href="{% url 'login' %}" class="pink-btn"><h3>زهور طبيعية</h3></a>
+<!-- فئات المنتجات -->
+<section class="product-buttons">
+  <div class="product">
+   
+    <div class="category-grid">
+      <div class="product-card">
+        <img src="{% static 'images/85.jpg' %}" alt="زهور طبيعية">
+        <div class="product-info">
+          <h3>زهور طبيعية</h3>
           <div class="price">
-              <span class="current-price">140 ر.س</span>
-            </div>
+            <span class="current-price">140 ر.س</span>
+          </div>
           <button class="add-to-cart">أضف إلى السلة</button>
         </div>
-        <div class="category-item">
-          <img src="{% static 'images/86.jpg' %}" alt="باقات مميزة">
-          <a href="{% url 'login' %}" class="pink-btn"><h3>باقات مميزة</h3></a>
+      </div>
+      <div class="product-card">
+        <img src="{% static 'images/86.jpg' %}" alt="باقات مميزة">
+        <div class="product-info">
+          <h3>باقات مميزة</h3>
           <div class="price">
-              <span class="current-price">150 ر.س</span>
-            </div>
+            <span class="current-price">150 ر.س</span>
+          </div>
           <button class="add-to-cart">أضف إلى السلة</button>
         </div>
-        <div class="category-item">
-          <img src="{% static 'images/83.jpg' %}" alt="هدايا">
-          <a href="{% url 'login' %}" class="pink-btn"><h3>هدايا</h3></a>
+      </div>
+      <div class="product-card">
+        <img src="{% static 'images/83.jpg' %}" alt="هدايا">
+        <div class="product-info">
+          <h3>هدايا</h3>
           <div class="price">
-              <span class="current-price">200 ر.س</span>
-            </div>
+            <span class="current-price">200 ر.س</span>
+          </div>
           <button class="add-to-cart">أضف إلى السلة</button>
         </div>
-        <div class="category-item">
-          <img src="{% static 'images/62.jpg' %}" alt="مناسبات">
-          <a href="{% url 'login' %}" class="pink-btn"><h3>مناسبات</h3></a>
+      </div>
+      <div class="product-card">
+        <img src="{% static 'images/62.jpg' %}" alt="مناسبات">
+        <div class="product-info">
+          <h3>مناسبات</h3>
           <div class="price">
-              <span class="current-price">100 ر.س</span>
-            </div>
+            <span class="current-price">100 ر.س</span>
+          </div>
           <button class="add-to-cart">أضف إلى السلة</button>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- المنتجات المميزة -->
-  <section class="featured-products">
-    <div class="container">
-      <h2 class="section-title">منتجات مميزة</h2>
-      <div class="product-grid">
-        <div class="product-card">
-          <div class="product-badge"></div>
-          <img src="{% static 'images/64.jpg' %}" alt="باقة مميزة">
-          <div class="product-info">
-            <h3>باقة حب</h3>
-            <div class="price">
-              <span class="current-price">199 ر.س</span>
-              <span class="old-price">249 ر.س</span>
-            </div>
-            <button class="add-to-cart">أضف إلى السلة</button>
+<!-- المنتجات المميزة -->
+<section class="featured-products">
+  <div class="container">
+    <div class="product-grid">
+      <div class="product-card">
+        <div class="product-badge"></div>
+        <img src="{% static 'images/64.jpg' %}" alt="باقة مميزة">
+        <div class="product-info">
+          <h3>باقة حب</h3>
+          <div class="price">
+            <span class="current-price">199 ر.س</span>
+            <span class="old-price">249 ر.س</span>
           </div>
+          <button class="add-to-cart">أضف إلى السلة</button>
         </div>
-        <div class="product-card">
-          <img src="{% static 'images/63.jpg' %}" alt="باقة زهور">
-          <div class="product-info">
-            <h3>باقة عيد ميلاد</h3>
-            <div class="price">
-              <span class="current-price">179 ر.س</span>
-            </div>
-            <button class="add-to-cart">أضف إلى السلة</button>
+      </div>
+      <div class="product-card">
+        <img src="{% static 'images/63.jpg' %}" alt="باقة زهور">
+        <div class="product-info">
+          <h3>باقة عيد ميلاد</h3>
+          <div class="price">
+            <span class="current-price">179 ر.س</span>
           </div>
+          <button class="add-to-cart">أضف إلى السلة</button>
         </div>
-        <div class="product-card">
-          <img src="{% static 'images/66.jpg' %}" alt="باقة زهور">
-          <div class="product-info">
-            <h3>باقة عيد ميلاد</h3>
-            <div class="price">
-              <span class="current-price">179 ر.س</span>
-            </div>
-            <button class="add-to-cart">أضف إلى السلة</button>
+      </div>
+      <div class="product-card">
+        <img src="{% static 'images/66.jpg' %}" alt="باقة زهور">
+        <div class="product-info">
+          <h3>باقة عيد ميلاد</h3>
+          <div class="price">
+            <span class="current-price">179 ر.س</span>
           </div>
+          <button class="add-to-cart">أضف إلى السلة</button>
         </div>
-        <div class="product-card">
-          <img src="{% static 'images/68.jpg' %}" alt="باقة زهور">
-          <div class="product-info">
-            <h3>باقة عيد ميلاد</h3>
-            <div class="price">
-              <span class="current-price">179 ر.س</span>
-            </div>
-            <button class="add-to-cart">أضف إلى السلة</button>
+      </div>
+      <div class="product-card">
+        <img src="{% static 'images/68.jpg' %}" alt="باقة زهور">
+        <div class="product-info">
+          <h3>باقة عيد ميلاد</h3>
+          <div class="price">
+            <span class="current-price">179 ر.س</span>
           </div>
+          <button class="add-to-cart">أضف إلى السلة</button>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- ✅ الإعلان العائم -->
   <div class="floating-ad" id="floatingAd">
@@ -664,9 +723,8 @@
 
 <script>
   // ✅ تحقق من حالة تسجيل الدخول (جلب من Django)
-  const isAuthenticated = "{{ request.user.is_authenticated|yesno:'true,false' }}";
+const isAuthenticated = "{{ request.user.is_authenticated|yesno:'true,false' }}";
 
-  // ✅ إضافة إلى السلة
   function addToCart(title, price) {
     const formData = new FormData();
     formData.append('product_name', title);
@@ -682,6 +740,7 @@
     .then(response => response.json())
     .then(data => {
       if (data.success) {
+        // ✅ تحديث العدد من القيمة القادمة من السيرفر
         document.querySelector('.cart-count').textContent = data.count;
       } else {
         alert(data.error || 'حدث خطأ، حاول مرة أخرى');
@@ -693,11 +752,22 @@
     });
   }
 
+   
   // ✅ كود تشغيل أزرار السلة من كروت المنتجات
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.add-to-cart').forEach(button => {
       button.addEventListener('click', function () {
         const card = this.closest('.product-card');
+        const title = card.querySelector('h3').innerText;
+        const priceText = card.querySelector('.current-price').innerText;
+        const price = priceText.replace(/[^\d.]/g, '');
+        addToCart(title, price);
+      });
+    });
+    // ✅ تفعيل زر السلة في كروت الفئات
+    document.querySelectorAll('.category-item .add-to-cart').forEach(button => {
+      button.addEventListener('click', function () {
+        const card = this.closest('.category-item');
         const title = card.querySelector('h3').innerText;
         const priceText = card.querySelector('.current-price').innerText;
         const price = priceText.replace(/[^\d.]/g, '');

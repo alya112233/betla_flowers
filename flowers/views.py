@@ -10,7 +10,7 @@ from .models import CartItem
 # ✅ الصفحة الرئيسية للزوار فقط
 def home_view(request):
     if request.user.is_authenticated:
-        logout(request)
+        return redirect('petals')  # 🔁 لا يخرجه، ينقله لحسابه
     return render(request, 'index.html')
 
 # ✅ الصفحات العامة
@@ -81,7 +81,7 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('petals')  # ✅ بعد التسجيل يدخل على صفحة حسابي
+            return redirect('login')  # ✅ بعد التسجيل يدخل على صفحة تسجيل الدخول 
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
