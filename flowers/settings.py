@@ -12,6 +12,8 @@ DEBUG = True
 
 # المضيفون المسموح لهم
 ALLOWED_HOSTS = ['betla-flowers.onrender.com', 'localhost', '127.0.0.1']
+# تم التعديل لتفعيل الموقع على Render
+
 
 # التطبيقات المثبتة
 INSTALLED_APPS = [
@@ -96,3 +98,6 @@ LOGOUT_REDIRECT_URL = '/'
 
 # الحقل الافتراضي للموديلات
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# دعم ملفات static عند DEBUG = False
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
