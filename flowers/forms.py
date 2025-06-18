@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
 
-
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(
         max_length=30,
@@ -62,8 +61,15 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ['first_name', 'last_name', 'email', 'username', 'password1', 'password2']
 
+    # ✅ التحقق من تكرار البريد الإلكتروني
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("البريد الإلكتروني مستخدم من قبل.")
+        return email
 
-# ✅ نموذج استعادة كلمة المرور
+
+# ✅ نموذج استعادة كلمة المرور (بدون تغيير)
 class CustomPasswordResetForm(PasswordResetForm):
     email = forms.EmailField(
         label="البريد الإلكتروني",

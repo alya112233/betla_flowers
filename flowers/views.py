@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .forms import RegisterForm
-from .models import CartItem
+from .models import CartItem, CustomerProfile
 
 def home_view(request):
     if request.user.is_authenticated:
@@ -72,6 +72,15 @@ def register_view(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+
+            # ✅ إنشاء CustomerProfile تلقائيًا
+            if not hasattr(user, 'customerprofile'):
+                CustomerProfile.objects.create(
+                    user=user,
+                    phone='0000000000',  # مؤقتًا، يمكن تحديثه لاحقًا من الفورم
+                    city='غير محدد'
+                )
+
             return redirect('login')
     else:
         form = RegisterForm()
