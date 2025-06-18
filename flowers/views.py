@@ -7,13 +7,11 @@ from django.views.decorators.http import require_POST
 from .forms import RegisterForm
 from .models import CartItem
 
-# ✅ الصفحة الرئيسية للزوار فقط
 def home_view(request):
     if request.user.is_authenticated:
-        return redirect('petals')  # 🔁 لا يخرجه، ينقله لحسابه
+        return redirect('petals')
     return render(request, 'index.html')
 
-# ✅ الصفحات العامة
 def about_view(request):
     return render(request, 'about.html')
 
@@ -32,14 +30,11 @@ def products_view(request):
         '45.jpg', '44.jpg', '22.jpg', '20.jpg', '8.jpg'
     ]
     return render(request, 'products.html', {'images': images})
-    return render(request, 'products.html')
 
-# ✅ صفحة حسابي
 @login_required
 def petals_view(request):
     return render(request, 'petals.html')
 
-# ✅ صفحة السلة
 @login_required
 def cart_view(request):
     items = CartItem.objects.filter(user=request.user)
@@ -55,12 +50,10 @@ def cart_view(request):
         'total': total
     })
 
-# ✅ صفحة الدفع
 @login_required
 def checkout_view(request):
     return render(request, 'checkout.html')
 
-# ✅ إرسال الطلب
 @require_POST
 @login_required
 def submit_order(request):
@@ -68,20 +61,18 @@ def submit_order(request):
         'success_message': '✅ تم إرسال الطلب بنجاح.'
     })
 
-# ✅ تحقق من حالة الطلب
 @login_required
 def check_order_status(request):
     has_order = CartItem.objects.filter(user=request.user).exists()
     return JsonResponse({"status": "confirmed" if has_order else "empty"})
 
-# ✅ إنشاء حساب وتسجيل دخول
+# ✅ إنشاء حساب وتحويل إلى تسجيل الدخول دون تسجيل الدخول تلقائيًا
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            return redirect('login')  # ✅ بعد التسجيل يدخل على صفحة تسجيل الدخول 
+            return redirect('login')
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
@@ -91,14 +82,13 @@ def forgot_password_view(request):
         return redirect('login')
     return render(request, 'forgot_password.html')
 
-# ✅ إضافة للسلة (يدعم الزوار والمستخدمين)
 @csrf_exempt
 def add_to_cart(request):
     if request.method == 'POST':
         product_name = request.POST.get('product_name')
         price = request.POST.get('price')
-        image = request.POST.get('image')  # ✅ استلام الصورة
-        print("📦 الصورة اللي وصلت:", image)  # ✅ طباعة لمراقبة القيمة
+        image = request.POST.get('image')
+        print("📦 الصورة اللي وصلت:", image)
 
         if not product_name or not price:
             return JsonResponse({'success': False, 'error': 'بيانات غير مكتملة'})
@@ -109,7 +99,7 @@ def add_to_cart(request):
                     user=request.user,
                     product_name=product_name,
                     price=price,
-                    image=image  # ✅ حفظ الصورة في قاعدة البيانات
+                    image=image
                 )
                 cart_count = CartItem.objects.filter(user=request.user).count()
                 request.session['cart_count'] = cart_count
@@ -119,7 +109,7 @@ def add_to_cart(request):
                     'product_name': product_name,
                     'price': price,
                     'quantity': 1,
-                    'image': image  # ✅ دعم الصورة للزوار (اختياري)
+                    'image': image
                 })
                 request.session['guest_cart'] = guest_cart
                 cart_count = len(guest_cart)
@@ -131,7 +121,6 @@ def add_to_cart(request):
 
     return JsonResponse({'success': False, 'error': 'الطلب غير صالح'})
 
-# ✅ حذف من السلة
 @csrf_exempt
 @login_required
 def remove_from_cart(request):
@@ -158,7 +147,6 @@ def remove_from_cart(request):
             return JsonResponse({'success': False, 'error': 'العنصر غير موجود'})
     return JsonResponse({'success': False, 'error': 'طلب غير صالح'})
 
-# ✅ تحديث الكمية
 @csrf_exempt
 @login_required
 def update_cart_quantity(request):
@@ -171,7 +159,6 @@ def update_cart_quantity(request):
             item.save()
 
             item_total = item.quantity * item.price
-
             items = CartItem.objects.filter(user=request.user)
             subtotal = sum(i.price * i.quantity for i in items)
             shipping_cost = 20
@@ -190,9 +177,6 @@ def update_cart_quantity(request):
             return JsonResponse({'success': False, 'error': 'فشل التحديث'})
     return JsonResponse({'success': False, 'error': 'طلب غير صالح'})
 
-# ✅ تسجيل الخروج وتحويل المستخدم إلى صفحة الزوار
 def logout_view(request):
     logout(request)
     return redirect('home')
-
-
