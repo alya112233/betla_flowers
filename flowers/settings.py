@@ -11,7 +11,7 @@ SECRET_KEY = 'django-insecure-v-ts7mg!#^_4dp3df0*2vdpiwpns9kn2wxz$4wtjh5g*p)u0v0
 DEBUG = True
 
 # المضيفون المسموح لهم
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['betla-flowers.onrender.com', 'localhost', '127.0.0.1']
 
 # التطبيقات المثبتة
 INSTALLED_APPS = [
