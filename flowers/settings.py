@@ -12,8 +12,6 @@ DEBUG = True
 
 # المضيفون المسموح لهم
 ALLOWED_HOSTS = ['betla-flowers.onrender.com', 'localhost', '127.0.0.1']
-# تم التعديل لتفعيل الموقع على Render
-
 
 # التطبيقات المثبتة
 INSTALLED_APPS = [
@@ -23,15 +21,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.humanize',  # ✅ تنسيق الأسعار والأرقام
-
-    'flowers',  # ✅ تطبيقك الأساسي (استبدلي بـ 'flowers' إذا كان الاسم الفعلي)
+    'django.contrib.humanize',
+    'flowers',
 ]
 
 # الوسطاء
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',  # ✅ يدعم السلة
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ أضفنا هذا السطر
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -40,18 +38,18 @@ MIDDLEWARE = [
 ]
 
 # ملف URLs الرئيسي
-ROOT_URLCONF = 'flowers.urls'  # تأكدي أن اسم المشروع الرئيسي هو flowers
+ROOT_URLCONF = 'flowers.urls'
 
 # إعدادات القوالب
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # ✅ مجلد القوالب
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',  # ✅ مهم للهيدر
+                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -87,17 +85,18 @@ USE_TZ = True
 # الملفات الثابتة
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # ✅ مكان التجميع
 
-# ملفات الوسائط (اختياري إن كنت سترفع صور لاحقًا)
+# ملفات الوسائط
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# التوجيهات بعد تسجيل الدخول والخروج
+# التوجيه بعد تسجيل الدخول والخروج
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # الحقل الافتراضي للموديلات
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# دعم ملفات static عند DEBUG = False
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# ✅ تفعيل whitenoise لتجميع static في الإنتاج
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
