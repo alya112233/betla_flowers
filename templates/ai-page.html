@@ -262,10 +262,11 @@
 <script>
   const isAuthenticated = "{{ request.user.is_authenticated|yesno:'true,false' }}";
 
-  function addToCart(name, price) {
+  function addToCart(name, price, image = "") {
     const formData = new FormData();
     formData.append('product_name', name);
     formData.append('price', price);
+    formData.append('image', image);  // ✅ إرسال الصورة
 
     fetch("{% url 'add_to_cart' %}", {
       method: "POST",
@@ -277,7 +278,6 @@
     .then(res => res.json())
     .then(data => {
       if (data.success) {
-        // ✅ تحديث العداد مباشرة
         document.querySelector('.cart-count').textContent = data.count;
         alert("تمت إضافة المنتج للسلة!");
       } else {
@@ -313,7 +313,6 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    // زر السلة في الهيدر
     const cartLink = document.querySelector(".cart-icon");
     if (cartLink && isAuthenticated !== "true") {
       cartLink.addEventListener("click", function (e) {
@@ -322,7 +321,7 @@
       });
     }
 
-    // تفعيل التوصيات الذكية
+    // ✅ تفعيل الذكاء الاصطناعي
     document.getElementById("aiForm").addEventListener("submit", function (e) {
       e.preventDefault();
 
@@ -341,13 +340,15 @@
       setTimeout(() => {
         document.getElementById("loading").style.display = "none";
 
+        const image = "{% static 'images/64.jpg' %}";  // ✅ الصورة التي تُرسل مع الطلب
+
         const recommendationHtml = `
           <div class="recommendation-card">
-            <img src="{% static 'images/64.jpg' %}" alt="باقة مقترحة">
+            <img src="${image}" alt="باقة مقترحة">
             <h3>باقة ${occasion} المميزة</h3>
             <p>مناسبة لـ ${recipient}</p>
             <p class="price">${budget} ر.س</p>
-            <button onclick="addToCart('باقة ${occasion}', ${budget})">أضف إلى السلة</button>
+            <button onclick="addToCart('باقة ${occasion}', ${budget}, '${image}')">أضف إلى السلة</button>
           </div>
         `;
 
